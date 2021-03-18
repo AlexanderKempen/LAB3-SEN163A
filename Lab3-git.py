@@ -95,15 +95,22 @@ def getMonthsOfYear(year):
     for month in months:
         getArticlesOfMonth(month)
         
+        
+#EXECUTING LINE.
+for year in years:
+    getMonthsOfYear(year)
+        
     
 
-
-if __name__ == '__main__':
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        results = executor.map(getMonthsOfYear,years)
-        for result in results:
-            df2 = df2.append(result)
-            #print(df2)
+# =============================================================================
+# 
+# if __name__ == '__main__':
+#     with concurrent.futures.ProcessPoolExecutor() as executor:
+#         results = executor.map(getMonthsOfYear,years)
+#         for result in results:
+#             df2 = df2.append(result)
+#             #print(df2)
+# =============================================================================
   
         
 finish = time.perf_counter()
