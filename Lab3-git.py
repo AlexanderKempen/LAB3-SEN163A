@@ -85,7 +85,6 @@ def getArticlesOfMonth(month):
         soupArticles = createSoupConnection(tabularazor+month)
         articles = findHtmlLink(soupArticles)
         for article in articles[:10]:
-            print('i')
             getArticleInfo(article)
         return df
     
@@ -99,6 +98,8 @@ def getMonthsOfYear(year):
 #EXECUTING LINE.
 for year in years:
     getMonthsOfYear(year)
+    
+df.to_csv('First10-articles_months_years')
         
     
 
