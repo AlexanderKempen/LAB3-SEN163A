@@ -21,7 +21,7 @@ def checkStatusSite(site):
         headers = site.headers
         print('Site is available','\n')
         print('The headers of the site are:', '\n', headers, '\n')
-   # 
+   # Hashtag
 src = result.content
 soup = BeautifulSoup(src,'lxml')
 #A tag is a hyperlink within the page, creates list of all the links
