@@ -9,17 +9,16 @@ Created on Mon Mar 15 20:33:58 2021
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import multiprocessing 
 import time
 import concurrent.futures
 
+#Starting the counter
 start = time.perf_counter()
 
+#Creating universal DataFrame for all articles
 column_names = ["Name", "Surname", "Year", "Month", "Day","Time","Title"]
 df = pd.DataFrame(columns = column_names)
 
-column_names = ["Name", "Surname", "Year", "Month", "Day","Time","Title"]
-df2 = pd.DataFrame(columns = column_names)
 
 #Initial website newspaper Tabularazor
 tabularazor = 'https://news.tabularazor.org/'
@@ -38,7 +37,7 @@ def createSoupConnection(http):
     soup = BeautifulSoup(src, 'lxml')
     return soup
 
-
+#Finds clickable html elements and returns these in a list
 def findHtmlLink(soupConnection):
     htmlLinks = []
     hyperlinks = soupConnection.find_all('a')
@@ -55,11 +54,7 @@ soupSite = createSoupConnection(tabularazor)
 #Create list for all the article years
 years = findHtmlLink(soupSite)
 
-#Create connection with the month site section
-soupMonth = createSoupConnection(tabularazor+years[0])
-months = findHtmlLink(soupMonth)
-
-
+#Adds article attributes in a DataFrame
 def getArticleInfo(article):
     index = len(df.index)
     soupArticle = createSoupConnection(tabularazor+article)
@@ -80,39 +75,49 @@ def getArticleInfo(article):
     df.loc[index,'Time'] = timess
     df.loc[index, 'Title'] = titles
                
-
+#Gets all the articles from a specific month
 def getArticlesOfMonth(month):
         soupArticles = createSoupConnection(tabularazor+month)
         articles = findHtmlLink(soupArticles)
-        for article in articles[:10]:
+        
+########Om alles te runnen verwijder hieronder [:100] 
+
+        for article in articles[:100]:
+            print('i')
             getArticleInfo(article)
-        return df
-    
+        #return df
+
+#Gets all the articles from a specific year and returns these in a DataFrame
 def getMonthsOfYear(year):
     soupMonth = createSoupConnection(tabularazor+year)
     months = findHtmlLink(soupMonth)
     for month in months:
         getArticlesOfMonth(month)
-        
-        
-#EXECUTING LINE.
-for year in years:
-    getMonthsOfYear(year)
-    
-df.to_csv('First10-articles_months_years')
-        
-    
+    return df
+
+
+######Verwijder # voor welk jaar je een DataFrame wilt maken
+
+#twelve = getMonthsOfYear(years[0])
+#thirteen = getMonthsOfYear(years[1])
+#fourteen = getMonthsOfYear(years[2])
+#fifteen = getMonthsOfYear(years[3])
+#sixteen = getMonthsOfYear(years[4])
+#seventeen = getMonthsOfYear(years[5])
+#eighteen = getMonthsOfYear(years[6])
+#nineteen = getMonthsOfYear(years[7])
 
 # =============================================================================
-# 
 # if __name__ == '__main__':
 #     with concurrent.futures.ProcessPoolExecutor() as executor:
 #         results = executor.map(getMonthsOfYear,years)
 #         for result in results:
 #             df2 = df2.append(result)
 #             #print(df2)
+#   
 # =============================================================================
-  
         
 finish = time.perf_counter()
+
+print(f'Finished in {round(finish-start,2)} seconds(s)')
 
