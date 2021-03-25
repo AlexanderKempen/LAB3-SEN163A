@@ -25,13 +25,6 @@ df2 =  pd.DataFrame(columns = column_names)
 #Initial website newspaper Tabularazor
 tabularazor = 'https://news.tabularazor.org/'
 
-#Indicates that page is accessible if 200 and valid
-def checkStatusSite(site):
-    if site.status_code == 200:
-        headers = site.headers
-        print('Site is available','\n')
-        print('The headers of the site are:', '\n', headers, '\n')
-
 #Creates connection with a specific input url creating soup object
 def createSoupConnection(http):
     inputUrl = requests.get(http)
@@ -94,11 +87,12 @@ def runMultiProcessing(df2):
             results = executor.map(getMonthsOfYear,years)
             for result in results:
                 df2 = df2.append(result)
+            df2.to_csv('resultScraping.csv')
             return df2
 
 ### Executing line ###
 resultScraping = runMultiProcessing(df2)
-resultScraping.to_csv("resultScraping.csv")
+
   
 finish = time.perf_counter()
 
