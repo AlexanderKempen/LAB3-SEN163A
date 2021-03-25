@@ -17,7 +17,7 @@ import concurrent.futures
 start = time.perf_counter()
 
 #Creating universal DataFrame for all articles
-column_names = ["Name", "Surname", "Date","Time"]
+column_names = ["Name","Date","Time"]
 df = pd.DataFrame(columns = column_names)
 df2 =  pd.DataFrame(columns = column_names)
 
@@ -68,8 +68,7 @@ def getArticleInfo(article):
     date = dates.get_text()
 
     name = author.split()
-    df.loc[index,'Name'] = name[0]
-    df.loc[index, 'Surname'] = name[1]
+    df.loc[index,'Name'] = name
     df.loc[index,'Date'] = date
     df.loc[index,'Time'] = time
 
