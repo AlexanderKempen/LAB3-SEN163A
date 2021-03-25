@@ -12,12 +12,14 @@ import pandas as pd
 import time
 import concurrent.futures
 
+
 #Starting the counter
 start = time.perf_counter()
 
 #Creating universal DataFrame for all articles
-column_names = ["Name", "Surname", "Year", "Month", "Day","Time","Title"]
+column_names = ["Name", "Surname", "Date","Time"]
 df = pd.DataFrame(columns = column_names)
+df2 =  pd.DataFrame(columns = column_names)
 
 
 #Initial website newspaper Tabularazor
@@ -47,7 +49,6 @@ def findHtmlLink(soupConnection):
         htmlLinks.append(hyperlink.attrs['href'])
     return htmlLinks
     
-
 #Create connection with the site
 soupSite = createSoupConnection(tabularazor)
 
@@ -58,34 +59,28 @@ years = findHtmlLink(soupSite)
 def getArticleInfo(article):
     index = len(df.index)
     soupArticle = createSoupConnection(tabularazor+article)
-    author = soupArticle.find('div', 'author')
-    date = soupArticle.find('div', 'date')
+    authors = soupArticle.find('div', 'author')
+    dates = soupArticle.find('div', 'date')
     times = soupArticle.find('div','time')
-    title = soupArticle.find('h1')
-    titles = title.get_text()
-    timess = times.get_text()
-    authora = author.get_text()
-    data = date.get_text().split('-')
-    name = authora.split()
+
+    time = times.get_text()
+    author = authors.get_text()
+    date = dates.get_text()
+
+    name = author.split()
     df.loc[index,'Name'] = name[0]
     df.loc[index, 'Surname'] = name[1]
-    df.loc[index,'Year'] = data[0]
-    df.loc[index,'Month'] = data[1]
-    df.loc[index,'Day'] = data[2]
-    df.loc[index,'Time'] = timess
-    df.loc[index, 'Title'] = titles
-               
+    df.loc[index,'Date'] = date
+    df.loc[index,'Time'] = time
+
+
 #Gets all the articles from a specific month
 def getArticlesOfMonth(month):
         soupArticles = createSoupConnection(tabularazor+month)
         articles = findHtmlLink(soupArticles)
-        
-########Om alles te runnen verwijder hieronder [:100] 
-
-        for article in articles[:100]:
-            print('i')
+        for article in articles:
             getArticleInfo(article)
-        #return df
+        return df
 
 #Gets all the articles from a specific year and returns these in a DataFrame
 def getMonthsOfYear(year):
@@ -95,29 +90,17 @@ def getMonthsOfYear(year):
         getArticlesOfMonth(month)
     return df
 
+def runMultiProcessing(df2):
+    if __name__ == '__main__':
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            results = executor.map(getMonthsOfYear,years)
+            for result in results:
+                df2 = df2.append(result)
+            return df2
 
-######Verwijder # voor welk jaar je een DataFrame wilt maken
-
-#twelve = getMonthsOfYear(years[0])
-#thirteen = getMonthsOfYear(years[1])
-#fourteen = getMonthsOfYear(years[2])
-#fifteen = getMonthsOfYear(years[3])
-#sixteen = getMonthsOfYear(years[4])
-#seventeen = getMonthsOfYear(years[5])
-#eighteen = getMonthsOfYear(years[6])
-#nineteen = getMonthsOfYear(years[7])
-
-# =============================================================================
-# if __name__ == '__main__':
-#     with concurrent.futures.ProcessPoolExecutor() as executor:
-#         results = executor.map(getMonthsOfYear,years)
-#         for result in results:
-#             df2 = df2.append(result)
-#             #print(df2)
-#   
-# =============================================================================
-        
+### Executing line ###
+resultScraping = runMultiProcessing(df2)
+  
 finish = time.perf_counter()
 
 print(f'Finished in {round(finish-start,2)} seconds(s)')
-
