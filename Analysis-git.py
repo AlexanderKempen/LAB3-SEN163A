@@ -30,38 +30,41 @@ def checkForSharedSurname(df):
 
     if df['Last Name'].is_unique:
         print('There are no couples with the the same last name')
-        
+
+# Converts the 'Date' column String object to datetime objects
 def convertDates(df):
     for index in range(len(df.index)):
         temp = df.loc[index,'Date']
         dateArray = temp.split('-')
         df.loc[index, 'Date'] = datetime.date(int(dateArray[0]),int(dateArray[1]),int(dateArray[2]))
-  
+        
+# Returns a list of all the authors working at Tabularazor Inc.     
+def extractAuthors(df):
+    df.drop_duplicates(subset="Name", keep="first", inplace=True)
+    authors = df['Name'].tolist()
+    return authors
+    
+    
+# Creates a list of the authors
+authors = extractAuthors(df)
 
-
-
+# Start date for 2012 DataFrame
 startd = datetime.date(2012, 1, 1)
 
-daystwentytwelve = []
+# Index as dates, 'D' for all calendar dates. 'B' could be used for all business days.
+index = pd.date_range(startd, periods=366, freq='D')
 
-i = 1
-daystwentytwelve.insert(i,startd)
-
-print(daystwentytwelve)
-
-for i in range(365):
-    daystwentytwelve.insert(i,datetime.timedelta(days=i))
-     
-    
-
-
+# Authors as columns
+columns = [authors]
+ 
+# Create 2012 DataFrame
+dfi = pd.DataFrame(index=index, columns=columns)
+dfi = dfi.fillna(0)
+ 
+print(dfi)
 
 
+# Transpose original 2012 DataFrame (switch columns with index)
+dfi_transposed = dfi.T 
 
-
-
-
-
-finish = time.perf_counter()
-
-print(f'Finished in {round(finish-start,2)} seconds(s)')
+print(dfi_transposed)
