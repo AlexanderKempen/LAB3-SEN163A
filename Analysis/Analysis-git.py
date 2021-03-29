@@ -55,7 +55,7 @@ def fillWorkingTable(df_scrape, df_filled):
         date = df_scrape.loc[i,'Date']
         name = df_scrape.loc[i,'Name']
         df_filled.loc[[date],[name]] += 1
-        df_filled.to_csv("Publising schedule.csv")
+    df_filled.to_csv("Publising schedule.csv")
     return df_filled
     
 # Creates the empty publishing table
