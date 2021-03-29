@@ -7,7 +7,6 @@ Created on Sat Mar 27 15:20:43 2021
 """
 
 import pandas as pd
-import datetime
 import time
 
 #Starting the counter
@@ -15,6 +14,7 @@ start = time.perf_counter()
 
 # Import the scraping data from csv to a DataFrame
 df = pd.read_csv('resultScraping.csv')
+
 
 #Needs fixing
 del df['Unnamed: 0']
@@ -30,41 +30,43 @@ def checkForSharedSurname(df):
 
     if df['Last Name'].is_unique:
         print('There are no couples with the the same last name')
-
-# Converts the 'Date' column String object to datetime objects
-def convertDates(df):
-    for index in range(len(df.index)):
-        temp = df.loc[index,'Date']
-        dateArray = temp.split('-')
-        df.loc[index, 'Date'] = datetime.date(int(dateArray[0]),int(dateArray[1]),int(dateArray[2]))
         
 # Returns a list of all the authors working at Tabularazor Inc.     
 def extractAuthors(df):
-    df.drop_duplicates(subset="Name", keep="first", inplace=True)
-    authors = df['Name'].tolist()
+    authors = list(df['Name'].unique())
     return authors
-    
-    
-# Creates a list of the authors
-authors = extractAuthors(df)
 
-# Start date for 2012 DataFrame
-startd = datetime.date(2012, 1, 1)
-
-# Index as dates, 'D' for all calendar dates. 'B' could be used for all business days.
-index = pd.date_range(startd, periods=366, freq='D')
-
-# Authors as columns
-columns = [authors]
+# Creates the publishing table for all authors and years
+def createWorkingTable(df):
+    # Creates a list of the authors
+    authors = extractAuthors(df)
+    # Index as dates, 'D' for all calendar dates. 'B' could be used for all business days.
+    index = pd.date_range(start = '2012/1/1', end = '2019/12/31', freq='D')
+    # Authors as columns
+    columns = [authors]
+    # Create the DataFrame
+    df = pd.DataFrame(index=index, columns=columns)
+    df = df.fillna(0)
+    return df
  
-# Create 2012 DataFrame
-dfi = pd.DataFrame(index=index, columns=columns)
-dfi = dfi.fillna(0)
- 
-print(dfi)
+# Fills the publishing table with the number of published article per day for each author
+def fillWorkingTable(df_scrape, df_filled):
+    for i in range(len(df_scrape.index)):
+        date = df_scrape.loc[i,'Date']
+        name = df_scrape.loc[i,'Name']
+        df_filled.loc[[date],[name]] += 1
+        df_filled.to_csv("Publising schedule.csv")
+    return df_filled
+    
+# Creates the empty publishing table
+workingTable = createWorkingTable(df)
+
+# Creates the publishing table with the number of published article per day for each author for the history of Tabularazor Inc.
+filledWorkingTable = fillWorkingTable(df, workingTable)
 
 
-# Transpose original 2012 DataFrame (switch columns with index)
-dfi_transposed = dfi.T 
+# End the timer
+finish = time.perf_counter()
 
-print(dfi_transposed)
+# Print the timer
+print(f'Finished in {round(finish-start,2)} seconds(s)')
