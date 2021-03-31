@@ -13,7 +13,7 @@ import time
 start = time.perf_counter()
 
 # Import the scraping data from csv to a DataFrame
-df = pd.read_csv('./Scraping/resultScraping.csv')
+df = pd.read_csv('resultScraping.csv')
 
 
 #Needs fixing
@@ -85,7 +85,7 @@ dfX.resample('W', kind='period').sum()
 # Correlation matrix of the matching holiday weeks per author.
 corr = dfX.corr()
 
-dfX = pd.read_csv('Publishing schedule weeks.csv')
+orderedCorrelation = dfX.corr().unstack().sort_values(ascending=False).drop_duplicates().tail(-1)
 
 # End the timer
 finish = time.perf_counter()
