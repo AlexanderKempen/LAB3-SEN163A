@@ -80,7 +80,7 @@ def fillWorkingTable(df_scrape, df_filled, weekType):
 
 # Creates DataFrame per week and days worked per author
 dfX = pd.read_csv('WeeksWorked.csv', parse_dates=[0], index_col=[0], skipinitialspace=True,)
-dfX.resample('W', kind='period').sum()
+workWeek = dfX.resample('W', kind='period').sum()
 
 # Correlation matrix of the matching holiday weeks per author.
 corr = dfX.corr()
