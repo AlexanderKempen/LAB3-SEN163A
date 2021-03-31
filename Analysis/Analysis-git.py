@@ -13,7 +13,7 @@ import time
 start = time.perf_counter()
 
 # Import the scraping data from csv to a DataFrame
-df = pd.read_csv('resultScraping.csv')
+df = pd.read_csv('./Scraping/resultScraping.csv')
 
 
 #Needs fixing
@@ -58,7 +58,6 @@ def fillWorkingTable(df_scrape, df_filled, weekType):
                 df_filled.loc[[date],[name]] += 1
             df_filled.to_csv("Publising schedule weeks.csv")
             return df_filled
-
     else:
         for i in range(len(df_scrape.index)):
             date = df_scrape.loc[i,'Date']
@@ -69,13 +68,24 @@ def fillWorkingTable(df_scrape, df_filled, weekType):
     return df_filled
 
     
-weekType = "D"
-# Creates the empty publishing table
-workingTable = createWorkingTable(df, weekType)
+# =============================================================================
+# weekType = "D"
+# # Creates the empty publishing table
+# workingTable = createWorkingTable(df, weekType)
+# 
+# # Creates the publishing table with the number of published article per day for each author for the history of Tabularazor Inc.
+# filledWorkingTable = fillWorkingTable(df, workingTable, weekType)
+# 
+# =============================================================================
 
-# Creates the publishing table with the number of published article per day for each author for the history of Tabularazor Inc.
-filledWorkingTable = fillWorkingTable(df, workingTable, weekType)
+# Creates DataFrame per week and days worked per author
+dfX = pd.read_csv('WeeksWorked.csv', parse_dates=[0], index_col=[0], skipinitialspace=True,)
+dfX.resample('W', kind='period').sum()
 
+# Correlation matrix of the matching holiday weeks per author.
+corr = dfX.corr()
+
+dfX = pd.read_csv('Publishing schedule weeks.csv')
 
 # End the timer
 finish = time.perf_counter()
