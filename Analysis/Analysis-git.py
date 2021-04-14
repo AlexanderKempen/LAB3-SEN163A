@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Mar 27 15:20:43 2021
 
-@author: alexanderkempen
+@author: group 11
 """
 'Step 0: Importing the necessary modules and packages'
 #%%
