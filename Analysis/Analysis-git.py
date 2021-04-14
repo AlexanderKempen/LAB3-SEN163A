@@ -4,7 +4,7 @@
 
 @author: group 11
 """
-'Step 0: Importing the necessary modules and packages'
+'0. Import modules and packages and start timer'
 #%%
 
 import pandas as pd
@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 #Starting the counter
 start = time.perf_counter()
 
-'Step 1: Functions for the preparation of the dataset for Analysis'
+'1. Functions for the preparation of the dataset for Analysis'
 #%%
 
 # Import the scraping data from csv to a DataFrame
@@ -70,7 +70,7 @@ def fillWorkingTable(df_scrape, df_filled):
             df_filled.to_csv("./ResultCSV/PublishingScheduleDays.csv")
             return df_filled
         
-'Step 2: Executing the preparation to retreive the dataset for Analysis'     
+'2. Executing the preparation to retreive the dataset for Analysis'     
 #%%
 # Creates the empty publishing table
 #workingTable = createWorkingTable(df)
@@ -84,7 +84,7 @@ weeksWorked = pd.read_csv('./ResultCSV/PublishingScheduleDays.csv', parse_dates=
 # Correlation matrix of the matching holiday weeks per author.
 corr = weeksWorked.corr().abs()
 
-'Step 3: functions for the Analysis'
+'3. Functions for the Analysis'
 #%%
 
 def averageArticlePerWeek(weeksWorked):
@@ -202,7 +202,7 @@ def maternityCheck(weeksWorked):
     plt.savefig('./Graphs/MaternityCheck.png')
 
 
-'Step 4: Executing the Analysis'
+'4. Executing the Analysis and calculate total calculation time'
 #%%
 
 #checkForSharedSurname(df)

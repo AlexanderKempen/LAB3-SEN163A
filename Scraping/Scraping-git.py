@@ -4,7 +4,7 @@
 
 @author: group 11
 """
-'0. Import libraries'
+'0. Import modules and packages'
 #%%
 import requests
 from bs4 import BeautifulSoup
