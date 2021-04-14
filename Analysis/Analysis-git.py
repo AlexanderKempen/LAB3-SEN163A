@@ -74,10 +74,10 @@ def fillWorkingTable(df_scrape, df_filled):
 'Step 2: Executing the preparation to retreive the dataset for Analysis'     
 #%%
 # Creates the empty publishing table
-workingTable = createWorkingTable(df)
+#workingTable = createWorkingTable(df)
 
 # Creates the publishing table with the day worked for each author for the history of Tabularazor Inc. (1 = has published that day, 0 =  has not published that day)
-filledWorkingTable = fillWorkingTable(df, workingTable)
+#filledWorkingTable = fillWorkingTable(df, workingTable)
 
 # Creates DataFrame per week and days worked per author, this reads the .csv file which is produces at line 69. Could also use the DataFrame filledWorkingTable
 weeksWorked = pd.read_csv('./ResultCSV/PublishingScheduleDays.csv', parse_dates=[0], index_col=[0], skipinitialspace=True,).resample('W', kind='period').sum()
@@ -87,6 +87,12 @@ corr = weeksWorked.corr().abs()
 
 'Step 3: functions for the Analysis'
 #%%
+
+def averageArticlePerWeek(weeksWorked):
+    averagePerWeek = weeksWorked.stack().mean()
+    return averagePerWeek
+
+print(averageArticlePerWeek(weeksWorked))
 
 # Generates an correlation heatmap for the author's and their working days per week 
 def heatmapCorrelationAll(correlation):
@@ -172,6 +178,8 @@ def findHolidaysOfAuthors(df):
 
     df_not_worked.loc[:,'Number of free days'] = df_not_worked.loc[:,'Days not worked'] - df_not_worked.loc[:,'Holiday'] - df_not_worked.loc[:,'Weekend']
     df_not_worked.loc[:,'Number of free days'] = df_not_worked.loc[:,'Number of free days']/8
+    
+    return df_not_worked
 
     myFig = plt.figure();
     boxplot = df_not_worked.boxplot(column=['Number of free days'])
@@ -200,17 +208,19 @@ def maternityCheck(weeksWorked):
 
 #checkForSharedSurname(df)
 
-heatmapCorrelationAll(corr)
-
-createCorrelationTableCouples()
-
-vactionOfCouple = showSimilarHolidayCouple(weeksWorked)
-
-authorPublicationPlot(df)
-
-maternityCheck(weeksWorked)
-
-findHolidaysOfAuthors(filledWorkingTable)
+# =============================================================================
+# heatmapCorrelationAll(corr)
+# 
+# createCorrelationTableCouples()
+# 
+# vactionOfCouple = showSimilarHolidayCouple(weeksWorked)
+# 
+# authorPublicationPlot(df)
+# 
+# maternityCheck(weeksWorked)
+# 
+#check = findHolidaysOfAuthors(filledWorkingTable)
+# =============================================================================
 
 
 # End the timer
