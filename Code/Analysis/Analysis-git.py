@@ -230,19 +230,17 @@ def maternityCheck(weeksWorked):
 
 #checkForSharedSurname(df)
 
-# =============================================================================
-# heatmapCorrelationAll(corr)
-# 
-# createCorrelationTableCouples()
-# 
-# vactionOfCouple = showSimilarHolidayCouple(weeksWorked)
-# 
-# authorPublicationPlot(df)
-# 
-# maternityCheck(weeksWorked)
-# 
-#check = findHolidaysOfAuthors(filledWorkingTable)
-# =============================================================================
+heatmapCorrelationAll(corr)
+
+createCorrelationTableCouples()
+
+vactionOfCouple = showSimilarHolidayCouple(weeksWorked)
+
+authorPublicationPlot(df)
+
+maternityCheck(weeksWorked)
+
+heck = findHolidaysOfAuthors(filledWorkingTable)
 
 
 # End the timer
