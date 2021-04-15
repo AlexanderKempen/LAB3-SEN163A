@@ -82,13 +82,23 @@ def fillWorkingTableArticlesPerDay(df_scrape, df_filled):
 '2. Executing the preparation to retreive the dataset for Analysis'     
 #%%
 # Creates the empty publishing table
-#workingTable = createWorkingTable(df)
+workingTable = createWorkingTable(df)
 
 # Creates the publishing table with the day worked for each author for the history of Tabularazor Inc. (1 = has published that day, 0 =  has not published that day)
 #filledWorkingTable = fillWorkingTable(df, workingTable)
 
-# Creates DataFrame per week and days worked per author, this reads the .csv file which is produces at line 69. Could also use the DataFrame filledWorkingTable
+# Creates the publishing table with amount of articles published for each author for the history of Tabularazor Inc. 
+#filledWorkingTableNumbers = fillWorkingTableArticlesPerDay(df, workingTable)
+
+# Creates DataFrame per week and days worked per author, this reads the .csv file which is produces at line 70. Could also use the DataFrame filledWorkingTable but is commented out due to computational speed.
 weeksWorked = pd.read_csv('./ResultCSV/PublishingScheduleDays.csv', parse_dates=[0], index_col=[0], skipinitialspace=True,).resample('W', kind='period').sum()
+
+# Creates DataFrame per week and amount of articles published per author, this reads the .csv file which is produces at line 79. Could also use the DataFrame filledWorkingTableNumbers but is commented out due to computational speed.
+weeksWorkedAmount = pd.read_csv('./ResultCSV/PublishedEachDay.csv', parse_dates=[0], index_col=[0], skipinitialspace=True,).resample('W', kind='period').sum()
+
+# Creates DataFrame per week and days worked per author, this reads the .csv file which is produces at line 79. Could also use the DataFrame filledWorkingTableNumbers but is commented out due to computational speed.
+yearsWorked = pd.read_csv('./ResultCSV/PublishedEachDay.csv', parse_dates=[0], index_col=[0], skipinitialspace=True,).resample('Y', kind='period').sum()
+
 
 # Correlation matrix of the matching holiday weeks per author.
 corr = weeksWorked.corr().abs()
