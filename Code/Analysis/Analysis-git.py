@@ -240,7 +240,7 @@ authorPublicationPlot(df)
 
 maternityCheck(weeksWorked)
 
-heck = findHolidaysOfAuthors(filledWorkingTable)
+#check = findHolidaysOfAuthors(filledWorkingTable)
 
 
 # End the timer
