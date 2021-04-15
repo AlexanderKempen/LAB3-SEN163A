@@ -69,6 +69,15 @@ def fillWorkingTable(df_scrape, df_filled):
                 df_filled.loc[[date],[name]] = 1
             df_filled.to_csv("./ResultCSV/PublishingScheduleDays.csv")
             return df_filled
+
+# Fills the publishing table with a zero (if the author has worked that day) or with a one (if the author did not work that day)
+def fillWorkingTableArticlesPerDay(df_scrape, df_filled):
+            for i in range(len(df_scrape.index)):
+                date = df_scrape.loc[i,'Date']
+                name = df_scrape.loc[i,'Name']
+                df_filled.loc[[date],[name]] += 1
+            df_filled.to_csv("./ResultCSV/PublishedEachDay.csv")
+            return df_filled
         
 '2. Executing the preparation to retreive the dataset for Analysis'     
 #%%
@@ -87,11 +96,15 @@ corr = weeksWorked.corr().abs()
 '3. Functions for the Analysis'
 #%%
 
+# Returns general statistics about the authors and their weekly publishing behaviour
 def averageArticlePerWeek(weeksWorked):
-    averagePerWeek = weeksWorked.stack().mean()
-    return averagePerWeek
+    perWeek = weeksWorked.replace(0, np.NaN)
+    return(perWeek.describe())
 
-print(averageArticlePerWeek(weeksWorked))
+# Print the amount of articles published each year when given the publishing schedule per year
+def totalArticlesEachYear(yearsWorked):
+    yearsWorkedMean = yearsWorked.replace(0, np.NaN)
+    print(yearsWorkedMean.iloc[:, 0:49].sum(axis=1))
 
 # Generates an correlation heatmap for the author's and their working days per week 
 def heatmapCorrelationAll(correlation):
